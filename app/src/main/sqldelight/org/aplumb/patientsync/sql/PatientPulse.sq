@@ -1,0 +1,26 @@
+CREATE TABLE patientPulse (
+    uuid TEXT NOT NULL UNIQUE PRIMARY KEY,
+    patientUuid TEXT NOT NULL,
+    timestamp TEXT NOT NULL,
+    heartRate REAL,
+    FOREIGN KEY(patientUuid) REFERENCES patient(uuid) ON DELETE CASCADE
+);
+
+selectByPatientUuid:
+SELECT *
+FROM patientPulse
+WHERE patientUuid = ?;
+
+insertOrReplace:
+INSERT OR REPLACE INTO patientPulse(
+  uuid,
+  patientUuid,
+  timestamp,
+  heartRate
+)
+VALUES (?, ?, ?, ?);
+
+delete:
+DELETE
+FROM patientPulse
+WHERE uuid = ?;

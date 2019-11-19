@@ -1,0 +1,34 @@
+CREATE TABLE patient (
+      uuid TEXT NOT NULL UNIQUE PRIMARY KEY,
+      remoteId INTEGER,
+      name TEXT NOT NULL
+);
+
+CREATE VIEW patientWithPulse AS
+SELECT p.*, pp.heartRate, max(pp.timestamp) pulseTimestamp
+FROM patient p
+LEFT OUTER JOIN patientPulse pp
+ON p.uuid = pp.patientUuid
+GROUP BY p.uuid;
+
+selectAll:
+SELECT *
+FROM patientWithPulse;
+
+selectByUuid:
+SELECT *
+FROM patientWithPulse
+WHERE uuid = ?;
+
+insertOrReplace:
+INSERT OR REPLACE INTO patient(
+  uuid,
+  remoteId,
+  name
+)
+VALUES (?, ?, ?);
+
+deleteByUuid:
+DELETE
+FROM patient
+WHERE uuid = ?;
